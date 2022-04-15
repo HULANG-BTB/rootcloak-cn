@@ -27,16 +27,6 @@ public class SettingsActivity extends PreferenceActivity {
                 .setSharedPreferencesMode(MODE_WORLD_READABLE);
         addPreferencesFromResource(R.xml.preferences);
 
-        Preference manageApps = findPreference("manage_apps");
-        manageApps.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(SettingsActivity.this, CustomizeApps.class);
-                startActivity(intent);
-                return false;
-            }
-        });
-
         Preference manageKeywords = findPreference("manage_keywords");
         manageKeywords.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

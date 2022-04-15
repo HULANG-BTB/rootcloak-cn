@@ -38,7 +38,6 @@ public class RootCloak implements IXposedHookLoadPackage {
     private static final String FAKE_FILE = "FAKEJUNKFILE";
     private static final String FAKE_PACKAGE = "FAKE.JUNK.PACKAGE";
     private static final String FAKE_APPLICATION = "FAKE.JUNK.APPLICATION";
-    private Set<String> appSet;
     private Set<String> keywordSet;
     private Set<String> commandSet;
     private Set<String> libnameSet;
@@ -47,30 +46,24 @@ public class RootCloak implements IXposedHookLoadPackage {
 
     public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
         isRootCloakLoadingPref = true;
-        Set<String> tmpAppSet = loadSetFromPrefs(Common.APPS); // Load prefs for any app. This way we can determine if it matches the list of apps to hide root from.
-        if (!(tmpAppSet.contains(lpparam.packageName))) { // If the app doesn't match, don't hook into anything, and just return.
-            isRootCloakLoadingPref = false;
-        } else {
-            appSet = tmpAppSet;
-            keywordSet = loadSetFromPrefs(Common.KEYWORDS);
-            commandSet = loadSetFromPrefs(Common.COMMANDS);
-            libnameSet = loadSetFromPrefs(Common.LIBRARIES);
-            initSettings();
-            isRootCloakLoadingPref = false;
+        keywordSet = loadSetFromPrefs(Common.KEYWORDS);
+        commandSet = loadSetFromPrefs(Common.COMMANDS);
+        libnameSet = loadSetFromPrefs(Common.LIBRARIES);
+        initSettings();
+        isRootCloakLoadingPref = false;
 
-            if (debugPref) {
-                XposedBridge.log("Loaded app: " + lpparam.packageName);
-            }
-
-            // Do all of the hooks
-            initOther(lpparam);
-            initFile(lpparam);
-            initPackageManager(lpparam);
-            initActivityManager(lpparam);
-            initRuntime(lpparam);
-            initProcessBuilder(lpparam);
-            initSettingsGlobal(lpparam);
+        if (debugPref) {
+            XposedBridge.log("Loaded app: " + lpparam.packageName);
         }
+
+        // Do all of the hooks
+        initOther(lpparam);
+        initFile(lpparam);
+        initPackageManager(lpparam);
+        initActivityManager(lpparam);
+        initRuntime(lpparam);
+        initProcessBuilder(lpparam);
+        initSettingsGlobal(lpparam);
     }
 
     /**
