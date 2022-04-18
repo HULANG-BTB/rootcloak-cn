@@ -15,6 +15,7 @@ public class Common {
     public static final String PACKAGE_NAME = "com.devadvance.rootcloak2";
     public static final String FIRST_RUN_KEY = PACKAGE_NAME + "IS_FIRST_RUN";
     public static final String DEBUG_KEY = "debug_logs";
+    public static final String GLOBAL_MODE_KEY = "all_app_mode";
     public static final String SHOW_WARNING = "SHOW_WARNING";
 
     public static final PrefSet APPS = new AppsSet();
