@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.util.Log;
 
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends PreferenceActivity {
@@ -27,7 +28,7 @@ public class SettingsActivity extends PreferenceActivity {
                 .setSharedPreferencesMode(MODE_WORLD_READABLE);
         addPreferencesFromResource(R.xml.preferences);
 
-        Preference manageApps = findPreference("manage_apps");
+        final Preference manageApps = findPreference("manage_apps");
         manageApps.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -36,6 +37,21 @@ public class SettingsActivity extends PreferenceActivity {
                 return false;
             }
         });
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Common.PREFS_SETTINGS, MODE_WORLD_READABLE);
+        boolean globalMode = sharedPreferences.getBoolean(Common.GLOBAL_MODE_KEY, false);
+        manageApps.setEnabled(!globalMode);
+
+        Preference allAppMode = findPreference("all_app_mode");
+        allAppMode.setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        boolean checked = (boolean)newValue;
+                        manageApps.setEnabled(!checked);
+                        return true;
+                    }
+                });
+
 
         Preference manageKeywords = findPreference("manage_keywords");
         manageKeywords.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

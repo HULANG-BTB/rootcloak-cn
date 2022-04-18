@@ -43,12 +43,13 @@ public class RootCloak implements IXposedHookLoadPackage {
     private Set<String> commandSet;
     private Set<String> libnameSet;
     private boolean debugPref;
+    private boolean globalModePref;
     private boolean isRootCloakLoadingPref = false;
 
     public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
         isRootCloakLoadingPref = true;
         Set<String> tmpAppSet = loadSetFromPrefs(Common.APPS); // Load prefs for any app. This way we can determine if it matches the list of apps to hide root from.
-        if (!(tmpAppSet.contains(lpparam.packageName))) { // If the app doesn't match, don't hook into anything, and just return.
+        if (!globalModePref && !(tmpAppSet.contains(lpparam.packageName))) { // If the app doesn't match, don't hook into anything, and just return.
             isRootCloakLoadingPref = false;
         } else {
             appSet = tmpAppSet;
@@ -623,6 +624,7 @@ public class RootCloak implements IXposedHookLoadPackage {
         final XSharedPreferences prefSettings = new XSharedPreferences(BuildConfig.APPLICATION_ID, Common.PREFS_SETTINGS);
         prefSettings.makeWorldReadable();
         debugPref = prefSettings.getBoolean(Common.DEBUG_KEY, false);
+        globalModePref = prefSettings.getBoolean(Common.GLOBAL_MODE_KEY, false);
     }
 
     /**
